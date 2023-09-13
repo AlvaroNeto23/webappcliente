@@ -1,0 +1,95 @@
+﻿@model ClienteModel
+@{
+    ViewBag.Title = "Cadastrar Com JQuery";
+}
+
+<h1>VIEWTIPADA</h1>
+
+@*Aqui não foi utilizado Razor, somente o Html5 puro*@
+<form method="post" action="~/ClienteCad/CadastrarComJQuery">
+
+    <div class="col-md-12 form-row">
+        <div class="form-group col-md-4">
+            <strong>
+                <label>Id</label>
+            </strong>
+            <input type="number" value="@Model.Id" name="Id" id="Id" />
+        </div>
+        <div class="form-group col-md-4">
+            <strong>
+                <label>Nome</label>
+            </strong>
+            <input type="text" value="@Model.Nome" name="Nome" id="Nome" />
+        </div>
+        <div class="form-group col-md-4">
+            <strong>
+                <label>E-mail</label>
+            </strong>
+            <input type="text" value="@Model.Email" name="Email" id="Email" />
+        </div>
+        <div class="form-row">
+
+            <div class="form-group col-md-6">
+                <label>Logradouro</label>
+                <select name="Logradouro" id="Logradouro">
+                    <option value="0">Selecione</option>
+                    @foreach (var item in @ViewBag.ListaLogradouros)
+                    {
+                        <option value="@item.Id">@item.Logradouro</option>
+                    }
+                </select>
+            </div>
+        </div>
+    </div>
+    <p>
+        <button name="btn-Enviar" id="btn-Enviar">Enviar Com JQuery usando tag Button</button>
+    </p>
+</form>
+
+@section Scripts{
+    <script>
+        $('#btn-Enviar').click(function () {
+
+            var sel1 = $("#Logradouro").find("option:selected").val();
+
+            $.post('/ClienteCad/Cadastrar',
+                {
+                    id: $('#Id').val(),
+                    Nome: $('#Nome').val(),
+                    Email: $('#Email').val(),
+                    Select1: sel1
+                })
+                //.success(function (data) { //Eu comentei porque este método irá retornar
+                //    alert(data);           //uma View() e não um Json()
+                //})
+                .error(function (erro) {
+                    alert(erro);
+                });
+        });
+    </script>
+
+    @* Criar e preencher via AJAX uma tabela contendo os Logradouros *@
+    <script>
+        $(document).ready(function () {
+            $.ajax({
+                method: Get,
+                url: '/Logradouro/ListarTodosLogradouros',
+                data: { parametroClienteId = '1' },
+                success: function (retorno) {
+                    $("#tabelaLogradouros").empty();
+                    var linha = "";
+                    $(retorno).each(function (index) {
+                        linha += "<tr><td>" + retorno[index].Id + "</td><td>" + retorno[index].Logradouro + "</td></tr>";
+
+                        linha += "<td><a href='javascript:Alterar(\"" + retorno[index].Id + "\")'Alterar</a></td>";
+                        linha += "<td><a href='javascript:Excluir(\"" + retorno[index].Id + "\")'Excluir</a></td>";
+                    });
+                    $("#tabelaLogradouros").append(linha);
+                },
+                error: function (erro) {
+                    alert(erro);
+                },
+            });
+        });
+    </script>
+}

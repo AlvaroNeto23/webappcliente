@@ -1,0 +1,36 @@
+﻿@{
+    ViewBag.Title = "Cadastrar";
+}
+
+<p>@ViewBag.Id</p>
+<p>@ViewBag.Nome</p>
+<p>@ViewBag.Email</p>
+<p>@ViewBag.Logradouro</p>
+
+<h1>Formulário Usando RAZOR</h1>
+
+@using (Html.BeginForm("Cadastrar", "Cliente", FormMethod.Post))
+{
+    <fieldset>
+        <legend>Cliente</legend>
+        <div>
+            Id
+            @ViewBag.Id
+        </div>
+        <div>
+            Nome
+            @ViewBag.Nome
+        </div>
+        <div>
+            E-mail
+            @ViewBag.Email
+        </div>
+        <div>
+            Logradouro
+            @ViewBag.Logradouro
+        </div>
+        <p>
+            <input type="submit" value="Enviar" />
+        </p>
+    </fieldset>
+}
